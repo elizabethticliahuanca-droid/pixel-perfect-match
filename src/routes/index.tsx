@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Heart, HandCoins, Users } from "lucide-react";
 import hero from "@/assets/hero.jpg";
-import { Page, btnPrimary, btnOutline } from "@/components/Shell";
+import fotoRosa from "@/assets/cocinera-rosa.jpg";
+import fotoCarmen from "@/assets/cocinera-carmen.jpg";
+import fotoElena from "@/assets/cocinera-elena.jpg";
+import { Page, btnPrimary } from "@/components/Shell";
 
 export const Route = createFileRoute("/")({
   head: () => ({

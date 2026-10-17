@@ -26,6 +26,23 @@ function Index() {
     { icon: Heart, t: "Sabor de casa", d: "Los jóvenes comen rico, sano y hecho a mano." },
     { icon: Users, t: "Compañía", d: "Comparte la mesa y una buena conversación." },
   ];
+  const motivadas = [
+    {
+      foto: fotoRosa,
+      nombre: "Rosa, 65 años",
+      motivacion: "«Cocino desde los 15 años. Ahora quiero que mi sazón llegue a más mesas y ganar mi propio dinero.»",
+    },
+    {
+      foto: fotoCarmen,
+      nombre: "Carmen, 62 años",
+      motivacion: "«Me llena de alegría que alguien disfrute mi comida. Aquí me siento útil y acompañada.»",
+    },
+    {
+      foto: fotoElena,
+      nombre: "Elena, 68 años",
+      motivacion: "«Cocinar para otros es mi forma de cuidarlos. Con este ingreso ayudo a mis nietos.»",
+    },
+  ];
   return (
     <Page>
       <section className="grid items-center gap-10 md:grid-cols-2">
@@ -35,10 +52,24 @@ function Index() {
           <p className="mt-5 text-xl text-muted-foreground">Sabor de Hogar une a mujeres de 60 a 70 años que aman cocinar con jóvenes ocupados que extrañan la comida casera.</p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link to="/rol" className={btnPrimary}>Empezar ahora</Link>
-            <Link to="/explorar" className={btnOutline}>Ver platos de hoy</Link>
           </div>
         </div>
         <img src={hero} alt="Una señora sirve guiso casero a un joven en su cocina" width={1600} height={1008} className="aspect-[4/3] w-full rounded-3xl object-cover shadow-warm" />
+      </section>
+      <section className="mt-16">
+        <h2 className="text-3xl font-bold md:text-4xl">Ellas quieren cocinarte</h2>
+        <p className="mt-3 text-xl text-muted-foreground">Mujeres de 60 a 70 años con muchas ganas de cocinar en tu hogar.</p>
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {motivadas.map(({ foto, nombre, motivacion }) => (
+            <figure key={nombre} className="overflow-hidden rounded-3xl border-2 border-border bg-card">
+              <img src={foto} alt={nombre} width={1024} height={1024} loading="lazy" className="aspect-square w-full object-cover" />
+              <figcaption className="p-6">
+                <p className="text-2xl font-bold">{nombre}</p>
+                <p className="mt-2 text-lg text-muted-foreground">{motivacion}</p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </section>
       <section className="mt-16 grid gap-6 md:grid-cols-3">
         {puntos.map(({ icon: Icon, t, d }) => (

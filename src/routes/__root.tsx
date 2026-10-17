@@ -11,6 +11,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "sonner";
+import { clearChunkReloadGuard, reloadOnceForChunkError } from "@/lib/chunk-recovery";
 import { AppAuth } from "@/components/AppAuth";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -121,6 +122,17 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    // The page loaded fine, so a later outdated copy is allowed to retry once.
+    clearChunkReloadGuard();
+    const recover = (event: Event) => {
+      event.preventDefault();
+      reloadOnceForChunkError();
+    };
+    window.addEventListener("vite:preloadError", recover);
+    return () => window.removeEventListener("vite:preloadError", recover);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

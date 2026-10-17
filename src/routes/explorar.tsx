@@ -56,7 +56,7 @@ function Explorar() {
         </fieldset>
         <div className="mt-6 flex flex-wrap items-end justify-between gap-4 rounded-2xl bg-secondary p-6 text-secondary-foreground" aria-live="polite">
           <p className="flex items-center gap-2 text-xl"><Clock className="size-6" /> {q.horas} horas × {soles(q.porHora)} por hora</p>
-          <p className="font-display text-5xl font-extrabold">{soles(q.total)}</p>
+          <p className="whitespace-nowrap font-display text-4xl font-extrabold sm:text-5xl">{soles(q.total)}</p>
         </div>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-left text-lg">

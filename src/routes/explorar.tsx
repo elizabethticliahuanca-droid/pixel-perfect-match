@@ -1,16 +1,17 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { MapPin, Search, Heart } from "lucide-react";
-import { Page, VoiceButton } from "@/components/Shell";
-import { cocineras, getCocinera, soles, useStore } from "@/lib/data";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { MapPin, MessageCircle, Clock } from "lucide-react";
+import { Page, btnWhatsapp } from "@/components/Shell";
+import { cocineras, soles, whatsappLink, type Cocinera } from "@/lib/data";
+import { cotizar, duraciones, tarifaPorHora, type Duracion, type Personas } from "@/lib/tarifas";
 
 export const Route = createFileRoute("/explorar")({
   head: () => ({
     meta: [
-      { title: "Platos caseros cerca de ti — Sabor de Hogar" },
-      { name: "description", content: "Encuentra sopas, platos de fondo y postres caseros hechos por abuelas de tu barrio." },
-      { property: "og:title", content: "Explora comida casera — Sabor de Hogar" },
-      { property: "og:description", content: "Platos caseros disponibles hoy cerca de ti." },
+      { title: "Contrata una cocinera en casa — Sabor de Hogar" },
+      { name: "description", content: "Cocineras de experiencia cocinan en tu casa por horas, por 2 días o una semana, para 1 a más de 4 personas." },
+      { property: "og:title", content: "Cocinera en casa — Sabor de Hogar" },
+      { property: "og:description", content: "Elige días y personas, mira la tarifa y coordina por WhatsApp." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -18,61 +19,63 @@ export const Route = createFileRoute("/explorar")({
   component: Explorar,
 });
 
-const filtros = ["Todos", "Sopas", "Platos de Fondo", "Postres caseros", "Opción en mesa"] as const;
+const chip = (sel: boolean) => `min-h-14 rounded-2xl border-4 px-5 text-xl font-bold ${sel ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card"}`;
 
 function Explorar() {
-  const { platos, pedidos } = useStore();
-  const [q, setQ] = useState("");
-  const [f, setF] = useState<(typeof filtros)[number]>("Todos");
-  const [radio, setRadio] = useState(3);
-  const lista = useMemo(() => platos
-    .filter((p) => p.distanciaKm <= radio)
-    .filter((p) => f === "Todos" || (f === "Opción en mesa" ? p.modalidades.includes("mesa") : p.categoria === f))
-    .filter((p) => `${p.nombre} ${getCocinera(p.cocineraId).nombre}`.toLowerCase().includes(q.toLowerCase()))
-    .sort((a, b) => a.distanciaKm - b.distanciaKm), [platos, q, f, radio]);
-
-  const mes = new Date().getMonth();
-  const impacto = cocineras.map((c) => ({ c, n: pedidos.filter((x) => x.cocineraId === c.id && new Date(x.fecha).getMonth() === mes).length })).filter((x) => x.n > 0);
-
+  const [d, setD] = useState<Duracion>("2dias");
+  const [p, setP] = useState<Personas>("1");
+  const q = cotizar(d, p);
   return (
     <Page>
-      <h1 className="text-4xl font-extrabold">¿Qué se te antoja hoy?</h1>
-      {impacto.length > 0 && (
-        <div className="mt-5 flex flex-wrap gap-3" aria-label="Tu impacto social">
-          {impacto.map(({ c, n }) => <p key={c.id} className="flex items-center gap-2 rounded-2xl bg-accent px-5 py-3 text-lg font-bold text-accent-foreground"><Heart className="size-5 fill-current" /> Has apoyado a {c.nombre.split(" ")[0]} con {n} {n === 1 ? "pedido" : "pedidos"} este mes</p>)}
-        </div>
-      )}
-      <div className="mt-6 flex gap-2">
-        <label className="relative flex-1"><span className="sr-only">Buscar plato o cocinera</span>
-          <Search className="absolute left-4 top-1/2 size-6 -translate-y-1/2 text-muted-foreground" aria-hidden />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar plato o cocinera…" className="min-h-14 w-full rounded-2xl border-2 border-input bg-card pl-12 pr-4 text-xl placeholder:text-muted-foreground" />
-        </label>
-        <VoiceButton label="buscar" onText={setQ} />
-      </div>
-      <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Filtros">
-        {filtros.map((x) => <button key={x} aria-pressed={f === x} onClick={() => setF(x)} className={`min-h-12 rounded-full border-2 px-5 text-lg font-bold ${f === x ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card"}`}>{x}</button>)}
-      </div>
-      <label className="mt-4 flex flex-wrap items-center gap-3 text-lg"><MapPin className="size-5 text-primary" aria-hidden /> Cerca de mí: hasta <strong>{radio} km</strong>
-        <input type="range" min={1} max={5} value={radio} onChange={(e) => setRadio(Number(e.target.value))} className="w-48 accent-primary" />
-      </label>
+      <h1 className="text-4xl font-extrabold md:text-5xl">Una cocinera de confianza en tu casa</h1>
+      <p className="mt-3 text-xl text-muted-foreground">Ella va a tu casa y cocina por horas. Tú eliges por cuánto tiempo y para cuántas personas.</p>
 
-      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {lista.map((p) => { const c = getCocinera(p.cocineraId); return (
-          <Link key={p.id} to="/plato/$id" params={{ id: p.id }} className="overflow-hidden rounded-3xl border-2 border-border bg-card shadow-warm transition hover:-translate-y-1">
-            <img src={p.foto} alt={p.nombre} loading="lazy" width={944} height={704} className="aspect-[4/3] w-full object-cover" />
-            <div className="p-5">
-              <div className="flex items-start justify-between gap-2"><h2 className="text-2xl font-bold">{p.nombre}</h2><span className="font-display text-2xl font-extrabold text-primary">{soles(p.precio)}</span></div>
-              <p className="mt-1 text-lg text-muted-foreground">por {c.nombre} · {p.distanciaKm} km</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {c.badges.slice(0, 1).map((b) => <span key={b} className="rounded-full bg-accent px-3 py-1 text-base font-bold text-accent-foreground">{b}</span>)}
-                {p.modalidades.includes("mesa") && <span className="rounded-full bg-muted px-3 py-1 text-base font-bold">🍽️ En su mesa</span>}
-              </div>
-              <p className="mt-3 text-base font-bold">{p.porciones > 0 ? `Quedan ${p.porciones} porciones` : "Agotado por hoy"}</p>
-            </div>
-          </Link>
-        ); })}
+      <section className="mt-8 rounded-3xl border-2 border-border bg-card p-6 md:p-8" aria-labelledby="cot">
+        <h2 id="cot" className="text-3xl font-bold">Calcula tu tarifa</h2>
+        <fieldset className="mt-5"><legend className="mb-2 text-xl font-bold">¿Por cuánto tiempo?</legend>
+          <div className="flex flex-wrap gap-3">{(Object.keys(duraciones) as Duracion[]).map((k) => (
+            <button key={k} aria-pressed={d === k} onClick={() => setD(k)} className={chip(d === k)}>{duraciones[k].label} <span className="font-normal">({duraciones[k].visitas} visitas de {duraciones[k].horasPorVisita} h)</span></button>
+          ))}</div>
+        </fieldset>
+        <fieldset className="mt-5"><legend className="mb-2 text-xl font-bold">¿Para cuántas personas?</legend>
+          <div className="flex flex-wrap gap-3">{(Object.keys(tarifaPorHora) as Personas[]).map((k) => (
+            <button key={k} aria-pressed={p === k} onClick={() => setP(k)} className={chip(p === k)}>{tarifaPorHora[k].label}</button>
+          ))}</div>
+        </fieldset>
+        <div className="mt-6 flex flex-wrap items-end justify-between gap-4 rounded-2xl bg-secondary p-6 text-secondary-foreground" aria-live="polite">
+          <p className="flex items-center gap-2 text-xl"><Clock className="size-6" /> {q.horas} horas × {soles(q.porHora)} por hora</p>
+          <p className="font-display text-5xl font-extrabold">{soles(q.total)}</p>
+        </div>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full text-left text-lg">
+            <caption className="sr-only">Tarifas</caption>
+            <thead><tr className="border-b-2 border-border"><th className="py-2">Personas</th><th>Por hora</th>{(Object.keys(duraciones) as Duracion[]).map((k) => <th key={k}>{duraciones[k].label}</th>)}</tr></thead>
+            <tbody>{(Object.keys(tarifaPorHora) as Personas[]).map((k) => (
+              <tr key={k} className="border-b border-border"><td className="py-2 font-bold">{tarifaPorHora[k].label}</td><td>{soles(tarifaPorHora[k].soles)}</td>{(Object.keys(duraciones) as Duracion[]).map((x) => <td key={x}>{soles(cotizar(x, k).total)}</td>)}</tr>
+            ))}</tbody>
+          </table>
+        </div>
+      </section>
+
+      <h2 className="mt-10 text-3xl font-bold">Cocineras disponibles</h2>
+      <div className="mt-5 grid gap-6 md:grid-cols-3">
+        {cocineras.map((c) => <Tarjeta key={c.id} c={c} d={d} p={p} total={q.total} />)}
       </div>
-      {lista.length === 0 && <p className="mt-10 text-center text-xl text-muted-foreground">No hay platos con esos filtros. Prueba ampliar la distancia.</p>}
     </Page>
+  );
+}
+
+function Tarjeta({ c, d, p, total }: { c: Cocinera; d: Duracion; p: Personas; total: number }) {
+  const msg = `Hola ${c.nombre.split(" ")[0]}, vi su perfil en Sabor de Hogar. Quisiera contratarla para cocinar en mi casa por ${duraciones[d].label} para ${tarifaPorHora[p].label.toLowerCase()} (${soles(total)}). ¿Tiene disponibilidad?`;
+  return (
+    <article className="flex flex-col rounded-3xl border-2 border-border bg-card p-6 shadow-warm">
+      <div className="flex items-center gap-4">
+        <div className="flex size-16 items-center justify-center rounded-full bg-primary font-display text-3xl text-primary-foreground" aria-hidden>{c.inicial}</div>
+        <div><h3 className="text-2xl font-bold">{c.nombre}</h3><p className="flex items-center gap-1 text-lg text-muted-foreground"><MapPin className="size-4" /> {c.distrito} · {c.edad} años</p></div>
+      </div>
+      <p className="mt-4 flex-1 text-lg">“{c.descripcion}”</p>
+      <div className="mt-3 flex flex-wrap gap-2">{c.badges.map((b) => <span key={b} className="rounded-full bg-accent px-3 py-1 text-base font-bold text-accent-foreground">{b}</span>)}</div>
+      <a href={whatsappLink(c.telefono, msg)} target="_blank" rel="noreferrer" className={`${btnWhatsapp} mt-5 w-full`}><MessageCircle className="size-6" /> Contratar · {soles(total)}</a>
+    </article>
   );
 }

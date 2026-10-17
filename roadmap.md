@@ -8,3 +8,7 @@
 ## Pendiente de confirmar con Elizabeth
 - [ ] Tarifas reales por hora (las actuales son referenciales).
 - [ ] Nombres, distritos y fotos reales de las cocineras (los de ejemplo son simulados).
+
+## Entregables
+- [x] Publicar los cambios para la app del celular.
+- [ ] Prompt final consolidado del proyecto (PROMPT_FINAL.md en Archivos).

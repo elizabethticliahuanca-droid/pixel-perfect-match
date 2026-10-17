@@ -1,0 +1,4 @@
+CREATE TABLE public.cook_dni (cook_id uuid PRIMARY KEY REFERENCES public.cook_profiles(id) ON DELETE CASCADE, user_id uuid NOT NULL, nombre text NOT NULL, contenido text NOT NULL, created_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT,INSERT,UPDATE,DELETE ON public.cook_dni TO authenticated; GRANT ALL ON public.cook_dni TO service_role;
+ALTER TABLE public.cook_dni ENABLE ROW LEVEL SECURITY;
+CREATE POLICY dni_owner ON public.cook_dni FOR ALL TO authenticated USING(user_id=auth.uid()) WITH CHECK(user_id=auth.uid() AND EXISTS(SELECT 1 FROM public.cook_profiles c WHERE c.id=cook_id AND c.user_id=auth.uid()));

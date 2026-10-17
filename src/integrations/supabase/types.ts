@@ -43,6 +43,38 @@ export type Database = {
           },
         ]
       }
+      cook_dni: {
+        Row: {
+          contenido: string
+          cook_id: string
+          created_at: string
+          nombre: string
+          user_id: string
+        }
+        Insert: {
+          contenido: string
+          cook_id: string
+          created_at?: string
+          nombre: string
+          user_id: string
+        }
+        Update: {
+          contenido?: string
+          cook_id?: string
+          created_at?: string
+          nombre?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cook_dni_cook_id_fkey"
+            columns: ["cook_id"]
+            isOneToOne: true
+            referencedRelation: "cook_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cook_profiles: {
         Row: {
           created_at: string

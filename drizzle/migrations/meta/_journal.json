@@ -15,6 +15,13 @@
       "when": 1792263611584,
       "tag": "0001_restrict_service_rpc_execution",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792263929069,
+      "tag": "0002_cook_dni_documents",
+      "breakpoints": true
     }
   ]
 }

@@ -22,7 +22,7 @@ export const Route = createFileRoute("/cocinera")({
   component: Cocinera,
 });
 
-interface Perfil { nombre: string; distrito: string; telefono: string; descripcion: string; foto?: string; certificado?: Certificado }
+interface Perfil { nombre: string; distrito: string; telefono: string; descripcion: string; foto?: string; certificado?: Certificado | undefined }
 const PKEY = "sabor-perfil";
 const field = "min-h-14 w-full rounded-2xl border-2 border-input bg-card px-4 text-xl";
 const label = "mb-2 block text-xl font-bold";

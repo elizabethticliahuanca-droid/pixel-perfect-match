@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { validarCertificado, type Certificado } from "@/lib/certificado";
 
 export function CertificadoLaboral({ value, onChange }: {
-  value?: Certificado;
+  value: Certificado | undefined;
   onChange: (value: Certificado | undefined) => void;
 }) {
   const input = useRef<HTMLInputElement>(null);

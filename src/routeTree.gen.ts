@@ -10,33 +10,73 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CocineraRouteImport } from './routes/cocinera'
+import { Route as ExplorarRouteImport } from './routes/explorar'
+import { Route as RolRouteImport } from './routes/rol'
+import { Route as PlatoIdRouteImport } from './routes/plato.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CocineraRoute = CocineraRouteImport.update({
+  id: '/cocinera',
+  path: '/cocinera',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExplorarRoute = ExplorarRouteImport.update({
+  id: '/explorar',
+  path: '/explorar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RolRoute = RolRouteImport.update({
+  id: '/rol',
+  path: '/rol',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlatoIdRoute = PlatoIdRouteImport.update({
+  id: '/plato/$id',
+  path: '/plato/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cocinera': typeof CocineraRoute
+  '/explorar': typeof ExplorarRoute
+  '/rol': typeof RolRoute
+  '/plato/$id': typeof PlatoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cocinera': typeof CocineraRoute
+  '/explorar': typeof ExplorarRoute
+  '/rol': typeof RolRoute
+  '/plato/$id': typeof PlatoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cocinera': typeof CocineraRoute
+  '/explorar': typeof ExplorarRoute
+  '/rol': typeof RolRoute
+  '/plato/$id': typeof PlatoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/cocinera' | '/explorar' | '/rol' | '/plato/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/cocinera' | '/explorar' | '/rol' | '/plato/$id'
+  id: '__root__' | '/' | '/cocinera' | '/explorar' | '/rol' | '/plato/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CocineraRoute: typeof CocineraRoute
+  ExplorarRoute: typeof ExplorarRoute
+  RolRoute: typeof RolRoute
+  PlatoIdRoute: typeof PlatoIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +88,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cocinera': {
+      id: '/cocinera'
+      path: '/cocinera'
+      fullPath: '/cocinera'
+      preLoaderRoute: typeof CocineraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explorar': {
+      id: '/explorar'
+      path: '/explorar'
+      fullPath: '/explorar'
+      preLoaderRoute: typeof ExplorarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rol': {
+      id: '/rol'
+      path: '/rol'
+      fullPath: '/rol'
+      preLoaderRoute: typeof RolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plato/$id': {
+      id: '/plato/$id'
+      path: '/plato/$id'
+      fullPath: '/plato/$id'
+      preLoaderRoute: typeof PlatoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CocineraRoute: CocineraRoute,
+  ExplorarRoute: ExplorarRoute,
+  RolRoute: RolRoute,
+  PlatoIdRoute: PlatoIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { Page, VoiceButton, btnPrimary, btnOutline } from "@/components/Shell";
 import { publicarPlato, soles, useStore, type Categoria, type Modalidad } from "@/lib/data";
 import sopa from "@/assets/sopa.jpg";
+import { CertificadoLaboral } from "@/components/CertificadoLaboral";
+import type { Certificado } from "@/lib/certificado";
 
 export const Route = createFileRoute("/cocinera")({
   head: () => ({
@@ -20,7 +22,7 @@ export const Route = createFileRoute("/cocinera")({
   component: Cocinera,
 });
 
-interface Perfil { nombre: string; distrito: string; telefono: string; descripcion: string; foto?: string }
+interface Perfil { nombre: string; distrito: string; telefono: string; descripcion: string; foto?: string; certificado?: Certificado }
 const PKEY = "sabor-perfil";
 const field = "min-h-14 w-full rounded-2xl border-2 border-input bg-card px-4 text-xl";
 const label = "mb-2 block text-xl font-bold";
@@ -51,7 +53,7 @@ function Cocinera() {
   useEffect(() => { const r = localStorage.getItem(PKEY); if (r) setPerfil(JSON.parse(r)); setCargado(true); }, []);
   if (!cargado) return <Page><p className="text-xl">Cargando…</p></Page>;
   if (!perfil) return <Registro onDone={(p) => { localStorage.setItem(PKEY, JSON.stringify(p)); setPerfil(p); }} />;
-  return <Panel perfil={perfil} />;
+  return <Panel perfil={perfil} onUpdate={(p) => { localStorage.setItem(PKEY, JSON.stringify(p)); setPerfil(p); }} />;
 }
 
 function Registro({ onDone }: { onDone: (p: Perfil) => void }) {
@@ -74,6 +76,7 @@ function Registro({ onDone }: { onDone: (p: Perfil) => void }) {
             </label>
           </div>
           <Campo id="b" l="Cuéntenos de usted" area value={p.descripcion} set={up("descripcion")} />
+          <CertificadoLaboral value={p.certificado} onChange={(certificado) => setP({ ...p, certificado })} />
           <button className={`${btnPrimary} w-full`}>Listo, entrar</button>
         </form>
       </div>
@@ -81,7 +84,7 @@ function Registro({ onDone }: { onDone: (p: Perfil) => void }) {
   );
 }
 
-function Panel({ perfil }: { perfil: Perfil }) {
+function Panel({ perfil, onUpdate }: { perfil: Perfil; onUpdate: (p: Perfil) => void }) {
   const { platos } = useStore();
   const [abierto, setAbierto] = useState(false);
   const mios = platos.filter((x) => x.cocineraId === "rosa" || x.id.startsWith("p-"));
@@ -92,6 +95,8 @@ function Panel({ perfil }: { perfil: Perfil }) {
         {perfil.foto ? <img src={perfil.foto} alt="" className="size-20 rounded-full object-cover" /> : <div className="flex size-20 items-center justify-center rounded-full bg-primary font-display text-4xl text-primary-foreground">{perfil.nombre[0]}</div>}
         <div><h1 className="text-4xl font-extrabold">Hola, {perfil.nombre.split(" ")[0]} 👋</h1><p className="text-xl text-muted-foreground">{perfil.distrito}</p></div>
       </div>
+
+      <div className="mt-8"><CertificadoLaboral value={perfil.certificado} onChange={(certificado) => onUpdate({ ...perfil, certificado })} /></div>
 
       <button onClick={() => setAbierto(true)} className={`${btnPrimary} mt-8 min-h-24 w-full text-3xl`}><Plus className="size-10" /> Publicar Comida de Hoy</button>
 

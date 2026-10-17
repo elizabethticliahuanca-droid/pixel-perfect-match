@@ -11,7 +11,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "sonner";
-import { clearChunkReloadGuard, reloadOnceForChunkError } from "@/lib/chunk-recovery";
+import { clearChunkReloadGuard, isChunkLoadError, reloadOnceForChunkError } from "@/lib/chunk-recovery";
 import { AppAuth } from "@/components/AppAuth";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -42,6 +42,8 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
+    // An outdated page copy blanks the screen: retry once with the current one.
+    if (isChunkLoadError(error)) reloadOnceForChunkError();
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
@@ -130,8 +132,17 @@ function RootComponent() {
       event.preventDefault();
       reloadOnceForChunkError();
     };
+    const recoverRejection = (event: PromiseRejectionEvent) => {
+      if (!isChunkLoadError(event.reason)) return;
+      event.preventDefault();
+      reloadOnceForChunkError();
+    };
     window.addEventListener("vite:preloadError", recover);
-    return () => window.removeEventListener("vite:preloadError", recover);
+    window.addEventListener("unhandledrejection", recoverRejection);
+    return () => {
+      window.removeEventListener("vite:preloadError", recover);
+      window.removeEventListener("unhandledrejection", recoverRejection);
+    };
   }, []);
 
   return (

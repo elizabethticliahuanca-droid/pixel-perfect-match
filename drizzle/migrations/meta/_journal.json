@@ -8,6 +8,13 @@
       "when": 1792263230932,
       "tag": "0000_in_app_services",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792263611584,
+      "tag": "0001_restrict_service_rpc_execution",
+      "breakpoints": true
     }
   ]
 }

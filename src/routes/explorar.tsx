@@ -29,7 +29,7 @@ export const Route = createFileRoute("/explorar")({
   component: Explorar,
 });
 
-const chip = (sel: boolean) => `min-h-14 rounded-2xl border-4 px-5 text-xl font-bold ${sel ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card"}`;
+const chip = (sel: boolean) => `h-auto min-h-14 max-w-full flex-wrap whitespace-normal rounded-2xl border-4 px-5 py-3 text-xl font-bold ${sel ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-card-foreground"}`;
 
 function Explorar() {
   const [d, setD] = useState<Duracion>("2dias");

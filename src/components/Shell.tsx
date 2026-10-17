@@ -49,7 +49,7 @@ export function VoiceButton({ onText, label }: { onText: (t: string) => void; la
     const r = new Ctor();
     r.lang = "es-PE";
     r.interimResults = false;
-    r.onresult = (e) => onText(e.results[0][0].transcript);
+    r.onresult = (e) => onText(e.results[0]?.[0]?.transcript ?? "");
     r.onend = () => setOn(false);
     r.onerror = () => setOn(false);
     rec.current = r;

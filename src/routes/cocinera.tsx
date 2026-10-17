@@ -62,7 +62,7 @@ function Registro({ onDone }: { onDone: (p: Perfil) => void }) {
       <div className="mx-auto max-w-2xl rounded-3xl border-2 border-border bg-card p-8">
         <h1 className="text-4xl font-extrabold">Bienvenida a su cocina</h1>
         <p className="mt-2 text-xl text-muted-foreground">Solo necesitamos unos datos. Puede tocar el micrófono 🎤 para hablar en vez de escribir.</p>
-        <form className="mt-8 space-y-6" onSubmit={(e) => { e.preventDefault(); if (!p.nombre || !p.telefono) return toast.error("Escriba su nombre y teléfono"); onDone(p); }}>
+        <form className="mt-8 space-y-6" onSubmit={(e) => { e.preventDefault(); if (!p.nombre || !p.telefono) { toast.error("Escriba su nombre y teléfono"); return; } onDone(p); }}>
           <Campo id="n" l="Su nombre" value={p.nombre} set={up("nombre")} />
           <Campo id="d" l="Distrito o barrio" value={p.distrito} set={up("distrito")} />
           <Campo id="t" l="Teléfono (WhatsApp)" type="tel" value={p.telefono} set={up("telefono")} />
@@ -132,7 +132,7 @@ function FormPlato({ onClose }: { onClose: () => void }) {
       <h2 id="fp" className="text-3xl font-bold">¿Qué cocinó hoy?</h2>
       <form className="mt-6 space-y-6" onSubmit={(e) => {
         e.preventDefault();
-        if (!nombre || !precio || mod.length === 0) return toast.error("Complete el nombre, precio y modalidad");
+        if (!nombre || !precio || mod.length === 0) { toast.error("Complete el nombre, precio y modalidad"); return; }
         publicarPlato({ nombre, precio: Number(precio), porciones: Number(porciones), foto: foto || sopa, categoria, modalidades: mod, cocineraId: "rosa", descripcion: "Hecho hoy con mucho cariño." });
         toast.success("¡Su plato ya está publicado!");
         onClose();

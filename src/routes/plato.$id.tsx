@@ -28,7 +28,7 @@ function Detalle() {
   const p = platos.find((x) => x.id === id);
   const [cant, setCant] = useState(1);
   const [estrellas, setEstrellas] = useState(5);
-  const [msg, setMsg] = useState(frases[0]);
+  const [msg, setMsg] = useState<string>(frases[0]!);
   if (!p) throw notFound();
   const c = getCocinera(p.cocineraId);
   const prom = p.resenas.length ? Math.round(p.resenas.reduce((a, r) => a + r.estrellas, 0) / p.resenas.length) : 5;

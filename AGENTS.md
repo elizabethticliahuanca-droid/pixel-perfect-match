@@ -15,3 +15,4 @@
 - Use Cloud-owned cook profiles and participant-scoped service requests/messages; expose only safe cook summaries through the public catalog RPC, because local demo profiles cannot receive real requests.
 - Mutate service status and compute quotes in database RPCs; allow one client review only after cook completion and client confirmation, so clients cannot forge service prices or star ratings.
 - Keep certificate files private in an owner-scoped table and reuse shared selection/validation; public cook summaries may reveal attachment status only, never the document contents.
+- Recover from a stale page copy with a one-shot guarded reload (src/lib/chunk-recovery.ts wired into the root error boundary and the preload/unhandled-rejection listeners); keep the sessionStorage guard, because reloading without it loops on a genuine failure.

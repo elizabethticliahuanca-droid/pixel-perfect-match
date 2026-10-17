@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.create_service(uuid,text,text,date,text,text) FROM anon; REVOKE EXECUTE ON FUNCTION public.change_service(uuid,text) FROM anon; GRANT EXECUTE ON FUNCTION public.create_service(uuid,text,text,date,text,text) TO authenticated; GRANT EXECUTE ON FUNCTION public.change_service(uuid,text) TO authenticated;

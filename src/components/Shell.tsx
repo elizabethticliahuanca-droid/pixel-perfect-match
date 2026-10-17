@@ -2,17 +2,23 @@ import { Link } from "@tanstack/react-router";
 import { Mic, MicOff } from "lucide-react";
 import { useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { useAppAuth } from "@/components/AppAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 export function Header() {
+  const { user } = useAppAuth();
   return (
     <header className="sticky top-0 z-20 border-b-2 border-border bg-card/95 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4">
         <Link to="/" className="flex items-center gap-2 font-display text-2xl font-extrabold text-primary">
           <span aria-hidden>🍲</span> Sabor de Hogar
         </Link>
-        <nav className="flex gap-2 text-lg font-bold" aria-label="Principal">
+        <nav className="flex flex-wrap gap-2 text-lg font-bold" aria-label="Principal">
           <Link to="/explorar" className="rounded-xl px-4 py-2 hover:bg-muted" activeProps={{ className: "bg-muted" }}>Contratar</Link>
           <Link to="/cocinera" className="rounded-xl px-4 py-2 hover:bg-muted" activeProps={{ className: "bg-muted" }}>Cocinar</Link>
+          <Button asChild variant="ghost" className="h-auto min-h-12 text-lg font-bold"><Link to="/servicios">Mis servicios</Link></Button>
+          {user && <Button variant="ghost" className="h-auto min-h-12 text-lg" onClick={() => void supabase.auth.signOut()}>Salir</Button>}
         </nav>
       </div>
     </header>
@@ -57,13 +63,14 @@ export function VoiceButton({ onText, label }: { onText: (t: string) => void; la
     setOn(true);
   };
   return (
-    <button type="button" onClick={toggle} aria-label={`Dictar por voz: ${label}`} aria-pressed={on}
+    <Button type="button" onClick={toggle} aria-label={`Dictar por voz: ${label}`} aria-pressed={on}
       className={`flex min-h-14 min-w-14 shrink-0 items-center justify-center rounded-2xl border-2 ${on ? "animate-pulse border-destructive bg-destructive text-destructive-foreground" : "border-secondary bg-accent text-accent-foreground"}`}>
       {on ? <MicOff className="size-7" /> : <Mic className="size-7" />}
-    </button>
+    </Button>
   );
 }
 
 export function Stars({ n }: { n: number }) {
-  return <span className="text-gold" aria-label={`${n} de 5 estrellas`}>{"★".repeat(n)}<span className="text-border">{"★".repeat(5 - n)}</span></span>;
+  const rounded = Math.max(0, Math.min(5, Math.round(n)));
+  return <span className="text-gold" aria-label={`${n} de 5 estrellas`}>{"★".repeat(rounded)}<span className="text-border">{"★".repeat(5 - rounded)}</span></span>;
 }

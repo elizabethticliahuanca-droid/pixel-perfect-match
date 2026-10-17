@@ -55,7 +55,7 @@ export function CertificadoLaboral({ value, onChange }: {
       <input ref={input} aria-label="Subir Certificado Único Laboral" type="file" accept="application/pdf,image/jpeg,image/png" className="sr-only"
         onChange={(event) => { void seleccionar(event.target.files?.[0]); event.target.value = ""; }} />
       {error && <p role="alert" className="text-lg font-bold text-destructive">{error}</p>}
-      <p className="text-lg text-muted-foreground">Guardado solo en este navegador. Aún no es visible para quienes contratan.</p>
+      <p className="text-lg text-muted-foreground">Al guardar su perfil, el documento queda privado en su cuenta. Adjuntarlo no equivale a verificarlo.</p>
     </section>
   );
 }

@@ -11,7 +11,7 @@ export function Header() {
           <span aria-hidden>🍲</span> Sabor de Hogar
         </Link>
         <nav className="flex gap-2 text-lg font-bold" aria-label="Principal">
-          <Link to="/explorar" className="rounded-xl px-4 py-2 hover:bg-muted" activeProps={{ className: "bg-muted" }}>Comer</Link>
+          <Link to="/explorar" className="rounded-xl px-4 py-2 hover:bg-muted" activeProps={{ className: "bg-muted" }}>Contratar</Link>
           <Link to="/cocinera" className="rounded-xl px-4 py-2 hover:bg-muted" activeProps={{ className: "bg-muted" }}>Cocinar</Link>
         </nav>
       </div>

@@ -14,13 +14,213 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      cook_certificates: {
+        Row: {
+          contenido: string
+          cook_id: string
+          nombre: string
+          user_id: string
+        }
+        Insert: {
+          contenido: string
+          cook_id: string
+          nombre: string
+          user_id: string
+        }
+        Update: {
+          contenido?: string
+          cook_id?: string
+          nombre?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cook_certificates_cook_id_fkey"
+            columns: ["cook_id"]
+            isOneToOne: true
+            referencedRelation: "cook_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cook_profiles: {
+        Row: {
+          created_at: string
+          descripcion: string
+          distrito: string
+          foto: string | null
+          id: string
+          nombre: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          descripcion?: string
+          distrito: string
+          foto?: string | null
+          id?: string
+          nombre: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          descripcion?: string
+          distrito?: string
+          foto?: string | null
+          id?: string
+          nombre?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      cook_reviews: {
+        Row: {
+          client_id: string
+          cook_id: string
+          created_at: string
+          estrellas: number
+          id: string
+          mensaje: string
+          request_id: string
+        }
+        Insert: {
+          client_id: string
+          cook_id: string
+          created_at?: string
+          estrellas: number
+          id?: string
+          mensaje?: string
+          request_id: string
+        }
+        Update: {
+          client_id?: string
+          cook_id?: string
+          created_at?: string
+          estrellas?: number
+          id?: string
+          mensaje?: string
+          request_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cook_reviews_cook_id_fkey"
+            columns: ["cook_id"]
+            isOneToOne: false
+            referencedRelation: "cook_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cook_reviews_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: true
+            referencedRelation: "service_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          request_id: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          request_id: string
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          request_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_messages_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "service_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_requests: {
+        Row: {
+          client_id: string
+          cook_id: string
+          created_at: string
+          detalles: string
+          distrito: string
+          duracion: string
+          fecha: string
+          id: string
+          personas: string
+          status: string
+          total: number
+        }
+        Insert: {
+          client_id: string
+          cook_id: string
+          created_at?: string
+          detalles?: string
+          distrito: string
+          duracion: string
+          fecha: string
+          id?: string
+          personas: string
+          status?: string
+          total: number
+        }
+        Update: {
+          client_id?: string
+          cook_id?: string
+          created_at?: string
+          detalles?: string
+          distrito?: string
+          duracion?: string
+          fecha?: string
+          id?: string
+          personas?: string
+          status?: string
+          total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_requests_cook_id_fkey"
+            columns: ["cook_id"]
+            isOneToOne: false
+            referencedRelation: "cook_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      change_service: {
+        Args: { p_id: string; p_status: string }
+        Returns: undefined
+      }
+      create_service: {
+        Args: {
+          p_cook: string
+          p_detalles: string
+          p_distrito: string
+          p_duracion: string
+          p_fecha: string
+          p_personas: string
+        }
+        Returns: string
+      }
+      public_cooks: { Args: never; Returns: Json }
     }
     Enums: {
       [_ in never]: never
